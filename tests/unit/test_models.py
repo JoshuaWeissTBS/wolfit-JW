@@ -99,6 +99,10 @@ def test_posts_have_categories():
     p = Post(title="Why indent?", body="Would not semicolons work?", category=cat)
     assert p.category == cat
 
+def test_posts_adjust_vote_from_none_vote_count_is_not_none(test_db, test_user):
+    p = Post(title="Why indent?", body="Would not semicolons work?", vote_count=None)
+    p.up_vote(test_user)
+    assert p.vote_count == 1
 
 def test_categories_have_posts(test_db, test_user, default_category, single_post):
     second = Post(
