@@ -24,3 +24,7 @@ def test_less_than_day_with_several_hours():
 def test_pretty_date_with_int_time():
     text = app.helpers.pretty_date(int(datetime.utcnow().timestamp()))
     assert text == "just now"
+
+def test_pretty_date_with_empty_time():
+    text = app.helpers.pretty_date(None)
+    assert text == "just now"
