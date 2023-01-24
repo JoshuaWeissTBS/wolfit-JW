@@ -29,7 +29,12 @@ def test_pretty_date_with_empty_time():
     text = app.helpers.pretty_date(None)
     assert text == "just now"
 
-def test_pretty_date_with_one_day():
+def test_pretty_date_with_one_day_ago():
     yesterday_timestamp = int((datetime.utcnow() - timedelta(days=1)).timestamp())
     text = app.helpers.pretty_date(yesterday_timestamp)
     assert text == "Yesterday"
+
+def test_pretty_date_with_several_days_ago():
+    yesterday_timestamp = int((datetime.utcnow() - timedelta(days=3)).timestamp())
+    text = app.helpers.pretty_date(yesterday_timestamp)
+    assert text == "3 days ago"
