@@ -53,3 +53,8 @@ def test_pretty_date_with_several_years_ago():
     timestamp = int((datetime.utcnow() - timedelta(days=365 * 2)).timestamp())
     text = app.helpers.pretty_date(timestamp)
     assert text == "2 years ago"
+
+def test_pretty_date_with_future_day():
+    timestamp = int((datetime.utcnow() + timedelta(days=1)).timestamp())
+    text = app.helpers.pretty_date(timestamp)
+    assert text == "just about now"
