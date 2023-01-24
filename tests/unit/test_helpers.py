@@ -15,3 +15,7 @@ def test_less_than_day_with_several_minutes():
 def test_less_than_day_with_one_hour():
     text = app.helpers.less_than_day(7000)
     assert text == "an hour ago"
+
+def test_less_than_day_with_several_hours():
+    text = app.helpers.less_than_day(86000)
+    assert text == str(86000 // 3600) + " hours ago"
