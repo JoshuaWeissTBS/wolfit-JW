@@ -43,3 +43,8 @@ def test_pretty_date_with_several_week_ago():
     yesterday_timestamp = int((datetime.utcnow() - timedelta(weeks=2)).timestamp())
     text = app.helpers.pretty_date(yesterday_timestamp)
     assert text == "2 weeks ago"
+
+def test_pretty_date_with_several_months_ago():
+    yesterday_timestamp = int((datetime.utcnow() - timedelta(days=60)).timestamp())
+    text = app.helpers.pretty_date(yesterday_timestamp)
+    assert text == "2 months ago"
