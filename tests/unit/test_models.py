@@ -135,8 +135,7 @@ def test_comments_can_be_down_voted_on(test_db, test_user, single_post_with_comm
     db.session.commit()
     comment.down_vote(new_user)
     # All comments start with a default vote count of 1
-    assert comment.vote_count == -1
-
+    assert comment.vote_count == 0
 
 def test_user_cannot_change_vote_count_for_own_comment(
     test_db, test_user, single_post_with_comment
