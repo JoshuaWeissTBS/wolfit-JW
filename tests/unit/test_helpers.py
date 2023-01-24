@@ -1,5 +1,5 @@
 import app.helpers
-from datetime import datetime 
+from datetime import datetime, timedelta 
 
 def test_less_than_day_with_less_than_minute():
     text = app.helpers.less_than_day(30)
@@ -28,3 +28,8 @@ def test_pretty_date_with_int_time():
 def test_pretty_date_with_empty_time():
     text = app.helpers.pretty_date(None)
     assert text == "just now"
+
+def test_pretty_date_with_one_day():
+    yesterday_timestamp = int((datetime.utcnow() - timedelta(days=1)).timestamp())
+    text = app.helpers.pretty_date(yesterday_timestamp)
+    assert text == "Yesterday"
