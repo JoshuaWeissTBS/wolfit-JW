@@ -30,21 +30,26 @@ def test_pretty_date_with_empty_time():
     assert text == "just now"
 
 def test_pretty_date_with_one_day_ago():
-    yesterday_timestamp = int((datetime.utcnow() - timedelta(days=1)).timestamp())
-    text = app.helpers.pretty_date(yesterday_timestamp)
+    timestamp = int((datetime.utcnow() - timedelta(days=1)).timestamp())
+    text = app.helpers.pretty_date(timestamp)
     assert text == "Yesterday"
 
 def test_pretty_date_with_several_days_ago():
-    yesterday_timestamp = int((datetime.utcnow() - timedelta(days=3)).timestamp())
-    text = app.helpers.pretty_date(yesterday_timestamp)
+    timestamp = int((datetime.utcnow() - timedelta(days=3)).timestamp())
+    text = app.helpers.pretty_date(timestamp)
     assert text == "3 days ago"
 
 def test_pretty_date_with_several_week_ago():
-    yesterday_timestamp = int((datetime.utcnow() - timedelta(weeks=2)).timestamp())
-    text = app.helpers.pretty_date(yesterday_timestamp)
+    timestamp = int((datetime.utcnow() - timedelta(weeks=2)).timestamp())
+    text = app.helpers.pretty_date(timestamp)
     assert text == "2 weeks ago"
 
 def test_pretty_date_with_several_months_ago():
-    yesterday_timestamp = int((datetime.utcnow() - timedelta(days=60)).timestamp())
-    text = app.helpers.pretty_date(yesterday_timestamp)
+    timestamp = int((datetime.utcnow() - timedelta(days=60)).timestamp())
+    text = app.helpers.pretty_date(timestamp)
     assert text == "2 months ago"
+
+def test_pretty_date_with_several_years_ago():
+    timestamp = int((datetime.utcnow() - timedelta(days=365 * 2)).timestamp())
+    text = app.helpers.pretty_date(timestamp)
+    assert text == "2 years ago"
