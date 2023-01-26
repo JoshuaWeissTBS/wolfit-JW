@@ -78,6 +78,15 @@ def test_post_vote_count_goes_up_after_voting(test_db, test_user, single_post):
     single_post.up_vote(test_user)
     assert single_post.vote_count == 1
 
+def test_post_vote_count_goes_down_after_voting(test_db, test_user, single_post):
+    assert single_post.vote_count == 0
+    single_post.down_vote(test_user)
+    assert single_post.vote_count == -1
+
+def test_a_user_can_only_down_vote_once(test_db, test_user, single_post):
+    single_post.down_vote(test_user)
+    single_post.down_vote(test_user)
+    assert single_post.vote_count == -1
 
 def test_a_user_can_only_vote_once(test_db, test_user, single_post):
     single_post.up_vote(test_user)
@@ -90,6 +99,10 @@ def test_posts_have_categories():
     p = Post(title="Why indent?", body="Would not semicolons work?", category=cat)
     assert p.category == cat
 
+def test_posts_adjust_vote_from_none_vote_count_is_not_none(test_db, test_user):
+    p = Post(title="Why indent?", body="Would not semicolons work?", vote_count=None)
+    p.up_vote(test_user)
+    assert p.vote_count == 1
 
 def test_categories_have_posts(test_db, test_user, default_category, single_post):
     second = Post(
@@ -128,6 +141,24 @@ def test_comments_can_be_voted_on(test_db, test_user, single_post_with_comment):
     # All comments start with a default vote count of 1
     assert comment.vote_count == 2
 
+def test_comments_can_be_down_voted_on(test_db, test_user, single_post_with_comment):
+    comment = single_post_with_comment.comments[0]
+    new_user = User(username="robot", email="robot@gmail.com")
+    db.session.add(new_user)
+    db.session.commit()
+    comment.down_vote(new_user)
+    # All comments start with a default vote count of 1
+    assert comment.vote_count == 0
+
+def test_comments_cannot_be_down_voted_twice(test_db, test_user, single_post_with_comment):
+    comment = single_post_with_comment.comments[0]
+    new_user = User(username="robot", email="robot@gmail.com")
+    db.session.add(new_user)
+    db.session.commit()
+    comment.down_vote(new_user)
+    comment.down_vote(new_user)
+    # All comments start with a default vote count of 1
+    assert comment.vote_count == 0
 
 def test_user_cannot_change_vote_count_for_own_comment(
     test_db, test_user, single_post_with_comment
