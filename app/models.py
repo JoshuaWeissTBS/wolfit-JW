@@ -190,12 +190,12 @@ class ActivityLog(db.Model):
         return cls.query.order_by(ActivityLog.id.desc()).first()
 
     @classmethod
-    def log_event(cls, user_id, details):
+    def log_event(cls, user_id, details, username):
         url = os.environ.get("ACTIVITY_LOGGER_URL")
         post_url = url + "/api/activities"
         new_activity = {
             "user_id": user_id,
-            "username": "Paul", # TODO: get username
+            "username": username,
             "timestamp": str(datetime.utcnow()),
             "details": details,
         }
