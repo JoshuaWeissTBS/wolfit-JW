@@ -3,6 +3,7 @@ import click
 import requests
 import json
 import time
+import os
 
 from flask_login import UserMixin
 
@@ -190,7 +191,7 @@ class ActivityLog(db.Model):
 
     @classmethod
     def log_event(cls, user_id, details):
-        url = 'http://127.0.0.1:8082' # TODO: get from config
+        url = os.environ.get("ACTIVITY_LOGGER_URL")
         post_url = url + "/api/activities"
         new_activity = {
             "user_id": user_id,
