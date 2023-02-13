@@ -186,10 +186,6 @@ class ActivityLog(db.Model):
         return f"<ActivityLog id {self.id} - {self.details[:20]}>"
 
     @classmethod
-    def latest_entry(cls):
-        return cls.query.order_by(ActivityLog.id.desc()).first()
-
-    @classmethod
     def log_event(cls, user_id, details, username):
         url = os.environ.get("ACTIVITY_LOGGER_URL")
         post_url = url + "/api/activities"
