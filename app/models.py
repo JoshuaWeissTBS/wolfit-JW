@@ -1,4 +1,9 @@
 from datetime import datetime
+import click
+import requests
+import json
+import time
+import os
 
 from flask_login import UserMixin
 
@@ -181,15 +186,25 @@ class ActivityLog(db.Model):
         return f"<ActivityLog id {self.id} - {self.details[:20]}>"
 
     @classmethod
-    def latest_entry(cls):
-        return cls.query.order_by(ActivityLog.id.desc()).first()
-
-    @classmethod
-    def log_event(cls, user_id, details):
-        e = cls(user_id=user_id, details=details)
-        db.session.add(e)
-        db.session.commit()
-
+    def log_event(cls, user_id, details, username):
+        url = os.environ.get("ACTIVITY_LOGGER_URL")
+        post_url = url + "/api/activities"
+        new_activity = {
+            "user_id": user_id,
+            "username": username,
+            "timestamp": str(datetime.utcnow()),
+            "details": details,
+        }
+        try:
+            r = requests.post(post_url, json=new_activity)
+            if r.status_code == 201:
+                print(f"Post new activity SUCCESS at {post_url}")
+                print(r.text)
+                print(json.loads(r.text))
+            else:
+                print(f"Post new activity FAILURE: {r.text}")
+        except requests.exceptions.RequestException:
+            print(f"Could not connect to activity log service at {url}")
 
 @login.user_loader
 def load_user(user_id):

@@ -8,5 +8,7 @@ test.env
 praw.ini
 wolfit_dev.db
 wolfit_test.db
+wolfit_prod.db
 .vscode/
 .idea
+.DS_Store
