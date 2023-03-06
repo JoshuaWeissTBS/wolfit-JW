@@ -6,12 +6,12 @@ import time
 import os
 
 from flask_login import UserMixin
-
 import markdown
 
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from app import db, login
+from tasks import post_activity
 from app.helpers import pretty_date
 
 user_vote = db.Table(
@@ -25,7 +25,6 @@ comment_vote = db.Table(
     db.Column("user.id", db.Integer, db.ForeignKey("user.id"), primary_key=True),
     db.Column("comment.id", db.Integer, db.ForeignKey("comment.id"), primary_key=True),
 )
-
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -188,6 +187,9 @@ class ActivityLog(db.Model):
     @classmethod
     def log_event(cls, user_id, details, username):
         url = os.environ.get("ACTIVITY_LOGGER_URL")
+        print("URL!!!", url)
+        if not url:
+            url = ""
         post_url = url + "/api/activities"
         new_activity = {
             "user_id": user_id,
@@ -195,16 +197,7 @@ class ActivityLog(db.Model):
             "timestamp": str(datetime.utcnow()),
             "details": details,
         }
-        try:
-            r = requests.post(post_url, json=new_activity)
-            if r.status_code == 201:
-                print(f"Post new activity SUCCESS at {post_url}")
-                print(r.text)
-                print(json.loads(r.text))
-            else:
-                print(f"Post new activity FAILURE: {r.text}")
-        except requests.exceptions.RequestException:
-            print(f"Could not connect to activity log service at {url}")
+        post_activity.delay(new_activity, post_url)
 
 @login.user_loader
 def load_user(user_id):
